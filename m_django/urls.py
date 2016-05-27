@@ -16,11 +16,9 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from m_django.views import hello, current_datetime, hours_ahead
+from books import urls as books_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^hello/$', hello),
-    url(r'^time/$', current_datetime),
-    url(r'^time/plus/(\d{1,2})/$', hours_ahead),
+    url(r'^books/', include(books_urls)),
 ]
