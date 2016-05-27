@@ -13,8 +13,7 @@ class Publisher(models.Model):
     website = models.URLField()
 
     def __str__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
-
+        return self.name
 
 class Author(models.Model):
     first_name = models.CharField(max_length=30)
@@ -30,6 +29,3 @@ class Book(models.Model):
     authors = models.ManyToManyField(Author)
     publisher = models.ForeignKey(Publisher)
     publication_date = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return self.title
