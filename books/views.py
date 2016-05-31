@@ -2,6 +2,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from .forms import ContactForm
 from django.core.mail import send_mail
+from django.template import loader, RequestContext, Context
 import datetime
 
 from books.models import Publisher, Author, Book
@@ -50,3 +51,40 @@ def contact(request):
             initial={'subject': 'some initial vlauejkasdas'}
         )
     return render(request, 'contact_form.html', {'form': form})
+
+#---------------------------------
+def oldway(request):
+    # ...
+    t = loader.get_template('template2.html')
+    c = Context({
+        'app': 'My app',
+        'user': request.user,
+        'ip_address': request.META['REMOTE_ADDR'],
+        'message': 'I am the second view.'
+    })
+    return t.render(c)
+
+def custom_proc(request):
+    return {
+        'app': 'My App',
+        'user': request.user,
+        'ip_address': request.META['REMOTE_ADDR'],
+    }
+
+def view_1(request):
+    t = loader.get_template('template1.html')
+    c = RequestContext(request, {'message': 'view1 message'},
+            processors=[custom_proc])
+    return t.render(c)
+
+def view_2(request):
+    t = loader.get_template('template2.html')
+    c = RequestContext(request, {'message': 'view2 message'},
+            processors=[custom_proc])
+    return t.render(c)
+
+
+def view_3(request):
+    return render(request, 'template3.html',
+        {'message': 'hello world'},
+        context_instance=RequestContext(request, processor=[custom_proc]))
